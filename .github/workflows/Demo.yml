@@ -8,5 +8,5 @@ jobs:
     steps:
     - name: test
       run : |
-       docker run securetest1/Demo 
+       docker run securetest1/demo 
       
