@@ -3,8 +3,7 @@ name: Shiftleft Scan
 "on":
 - workflow_dispatch
 - pull_request
-permissions:
-  actions: write
+permissions: write-all  
 jobs:
   scanning:
     env:
