@@ -6,19 +6,19 @@ name: Shiftleft Scan
 jobs:
   scanning:
     env:
-      APP_ID: eb7871c25c08bbcf6376f1d5cee840da32e65d09de591ea9c435563e41c42f0a
-      REQ_URL_MAP: "${{toJSON('{\"SL_RESULTPARSER_API_HOST\":\"https://slresultparserapi.dev.securin.io/resultparserapi/v1\"\
-        ,\"SL_RESULT_API_HOST\":\"https://slresultapi.dev.securin.io/resultapi/v1\"\
-        ,\"SL_API_HOST\":\"https://slapi.dev.securin.io/shiftleftapi\"}')}}"
+      APP_ID: d0f90369aae97763b20ee2e6fdee87559078e0f18fa3a14bf77ce095bb3e7443
+      BRANCH_NAME: main
+      SCAN_ID: f92e737ed772f8cbc31f0ea60ff21585f5cc9552d91dd437d67a76c45734a915
+      REQ_URL_MAP: "${{toJSON('{\"SL_API_HOST\":\"https://slapi.dev.securin.io\",\"\
+        SL_RESULT_API_HOST\":\"https://slresultapi.dev.securin.io\",\"SL_RESULTPARSER_API_HOST\"\
+        :\"https://slresultparserapi.dev.securin.io\"}')}}"
     steps:
-    - name: Retrieve Scan Info
+    - name: Retrieve Token Info
       id: auth_token
-      run: "respJson=$(curl --location --request GET 'https://slapi.dev.securin.io/shiftleftapi/scan-info?app_id=${{\
-        \ env.APP_ID }}'  --header 'Authorization: Bearer ${{secrets.CLI_ACCESS_TOKEN}}'\
-        \  --data-raw ' ' )\necho \"::set-output name=authTokenJson::$respJson\""
+      run: "respJson=$(curl --location --request GET 'https://slresultapi.dev.securin.io/aws/ecr/token'\
+        \  --header 'Authorization: Bearer ${{secrets.CLI_ACCESS_TOKEN}}'  --data-raw\
+        \ ' ' )\necho \"::set-output name=authTokenJson::$respJson\""
     - uses: actions/checkout@v2
-    - name: Build with Maven
-      run: mvn -q --batch-mode --update-snapshots verify
     - name: Scan Initiated
       id: sec_scan_init
       run: "usrVal=$(echo '${{fromJson(steps.auth_token.outputs.authTokenJson).user}}'\
@@ -33,8 +33,9 @@ jobs:
         \ \ndocker pull -q $usrImgTag \ndocker run -v ${{github.workspace}}:/src \
         \ --volume ${{github.workspace}}:/workdir -v /var/run/docker.sock:/var/run/docker.sock\
         \ $usrImgTag -access_tkn ${{secrets.CLI_ACCESS_TOKEN}} -app_id ${{ env.APP_ID\
-        \ }} -req_url_map ${{ env.REQ_URL_MAP }} event:${{ github.event_name }}  pr_number:${{\
-        \ github.event.number }}"
+        \ }} -scan_id ${{ env.SCAN_ID }} -branch_name ${{ env.BRANCH_NAME }} -req_url_map\
+        \ ${{ env.REQ_URL_MAP }} event:${{ github.event_name }}  pr_number:${{ github.event.number\
+        \ }}"
     - name: Upload SARIF file
       uses: github/codeql-action/upload-sarif@v1
       with:
