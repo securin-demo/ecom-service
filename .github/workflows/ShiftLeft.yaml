@@ -13,14 +13,14 @@ jobs:
     env:
       APP_ID: 4536a2815adaf15005e8fb3bc8f600429de1635dd9397af47b725efeb92c083f
       BRANCH_NAME: main
-      SCAN_ID: acc337c63d848a236ee96be6627a7b9ffafb810b6161a8bb347385eb092b371a
-      REQ_URL_MAP: "${{toJSON('{\"SL_RESULT_API_HOST\":\"http://9b15-122-174-171-242.ngrok.io/resultapi\"\
-        ,\"SL_RESULTPARSER_API_HOST\":\"http://8059-122-174-171-242.ngrok.io/resultparserapi\"\
+      SCAN_ID: 464590fa0af3a0eae9fc514db3a56d2c63d3feeb13589618e5f088469f3ab134
+      REQ_URL_MAP: "${{toJSON('{\"SL_RESULT_API_HOST\":\"http://6c97-171-61-244-13.ngrok.io/resultapi\"\
+        ,\"SL_RESULTPARSER_API_HOST\":\"http://6128-171-61-244-13.ngrok.io/resultparserapi\"\
         }')}}"
     steps:
     - name: Retrieve Token Info
       id: auth_token
-      run: "respJson=$(curl --location --request GET 'http://9b15-122-174-171-242.ngrok.io/resultapi/aws/ecr/token'\
+      run: "respJson=$(curl --location --request GET 'http://6c97-171-61-244-13.ngrok.io/resultapi/aws/ecr/token'\
         \  --header 'Authorization: Bearer ${{secrets.CLI_ACCESS_TOKEN}}'  --data-raw\
         \ ' ' )\necho \"::set-output name=authTokenJson::$respJson\""
     - uses: actions/checkout@v2
