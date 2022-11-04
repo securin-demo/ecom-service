@@ -13,16 +13,15 @@ jobs:
     env:
       APP_ID: dd8b87d08a5e4289f8c4fffe399686d56299d64bdb2e54aa41fbbb1018121913
       BRANCH_NAME: main
-      SCAN_ID: d1251ca750b165a7c6f90bbff893c1e7e1df9e339946e715ed5faeb3c5918316
+      SCAN_ID: ed826b01601dd164809fea6ac5b63d9d9906a149864e163dc5d69e3a131b72c3
       REQ_URL_MAP: "${{toJSON('{\"SL_RESULT_API_HOST\":\"https://slresultapi.dev.securin.io/resultapi/v1\"\
-        ,\"SL_RESULTPARSER_API_HOST\":\"https://slresultparserapi.dev.securin.io/resultparserapi/v1\"\
-        }')}}"
+        ,\"SL_RESULTPARSER_API_HOST\":\"http://localhost:8086/resultparserapi\"}')}}"
     steps:
     - name: Retrieve Token Info
       id: auth_token
       run: "respJson=$(curl --location --request GET 'https://slresultapi.dev.securin.io/resultapi/v1/aws/ecr/token'\
         \  --header 'Authorization: Bearer ${{secrets.CLI_ACCESS_TOKEN}}'  --data-raw\
-        \ ' ' )\necho \"::set-output name=authTokenJson::$respJson\""
+        \ ' ' )\necho \"{authTokenJson}={$respJson}\" >> $GITHUB_OUTPUT\""
     - uses: actions/checkout@v2
     - name: Scan Initiated
       id: sec_scan_init
@@ -42,7 +41,7 @@ jobs:
         \ ${{ env.REQ_URL_MAP }} -tool_name github event:${{ github.event_name }}\
         \  pr_number:${{ github.event.number }}"
     - name: Upload SARIF file
-      uses: github/codeql-action/upload-sarif@v1
+      uses: github/codeql-action/upload-sarif@v2
       with:
         sarif_file: "${{github.workspace}}/results/result.sarif"
       if: hashFiles('**/result.sarif') !=''
