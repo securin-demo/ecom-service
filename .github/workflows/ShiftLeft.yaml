@@ -13,7 +13,7 @@ jobs:
     env:
       APP_ID: dd8b87d08a5e4289f8c4fffe399686d56299d64bdb2e54aa41fbbb1018121913
       BRANCH_NAME: main
-      SCAN_ID: 655ab7b893e1f314e0e86af0dc687f49cdd6caba8f5c25be5fbee2a943c40ebf
+      SCAN_ID: f8ceed8486b3bf189dea0f181fae1d212996e18ef8f418f72596b329df83a8d8
       REQ_URL_MAP: "${{toJSON('{\"SL_RESULT_API_HOST\":\"http://3d89-136-185-79-7.ngrok.io/resultapi\"\
         ,\"SL_RESULTPARSER_API_HOST\":\"http://4a42-136-185-79-7.ngrok.io/resultparserapi\"\
         }')}}"
@@ -22,7 +22,7 @@ jobs:
       id: auth_token
       run: "respJson=$(curl --location --request GET 'http://3d89-136-185-79-7.ngrok.io/resultapi/aws/ecr/token'\
         \  --header 'Authorization: Bearer ${{secrets.CLI_ACCESS_TOKEN}}'  --data-raw\
-        \ ' ' )\necho \"{authTokenJson}={$respJson}\" >> $GITHUB_OUTPUT"
+        \ ' ' )\necho \"{authTokenJson}=${respJson}\" >> $GITHUB_OUTPUT"
     - uses: actions/checkout@v2
     - name: Scan Initiated
       id: sec_scan_init
