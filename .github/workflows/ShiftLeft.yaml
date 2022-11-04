@@ -13,7 +13,7 @@ jobs:
     env:
       APP_ID: dd8b87d08a5e4289f8c4fffe399686d56299d64bdb2e54aa41fbbb1018121913
       BRANCH_NAME: main
-      SCAN_ID: b4522d08ffa0f6fb82fff9d9535c949f2c922954d23467f2d8f0408ec51fa419
+      SCAN_ID: 655ab7b893e1f314e0e86af0dc687f49cdd6caba8f5c25be5fbee2a943c40ebf
       REQ_URL_MAP: "${{toJSON('{\"SL_RESULT_API_HOST\":\"http://3d89-136-185-79-7.ngrok.io/resultapi\"\
         ,\"SL_RESULTPARSER_API_HOST\":\"http://4a42-136-185-79-7.ngrok.io/resultparserapi\"\
         }')}}"
@@ -26,20 +26,21 @@ jobs:
     - uses: actions/checkout@v2
     - name: Scan Initiated
       id: sec_scan_init
-      run: "usrVal=$(echo '${{fromJson(env.authTokenJson).user}}' | openssl enc -aes-256-cbc\
-        \ -d -a -K ${{secrets.ENC_KEY}} -iv ${{secrets.ENC_IV}} ) \nusrPassword=$(echo\
-        \ '${{fromJson(env.authTokenJson).password}}' | openssl enc -aes-256-cbc -d\
-        \ -base64 -A -K ${{secrets.ENC_KEY}} -iv ${{secrets.ENC_IV}} ) \nusrPrxyUrl=$(echo\
-        \ '${{fromJson(env.authTokenJson).proxyUrl}}' | openssl enc -aes-256-cbc -d\
-        \ -a -K ${{secrets.ENC_KEY}} -iv ${{secrets.ENC_IV}} ) \nusrImgTag=$(echo\
-        \ '${{fromJson(env.authTokenJson).imageTag}}' | openssl enc -aes-256-cbc -d\
-        \ -a -K ${{secrets.ENC_KEY}} -iv ${{secrets.ENC_IV}} ) \ndocker login --username\
-        \  $usrVal --password $usrPassword $usrPrxyUrl \ndocker pull -q $usrImgTag\
-        \ \ndocker run -v ${{github.workspace}}:/src  --volume ${{github.workspace}}:/workdir\
-        \ -v /var/run/docker.sock:/var/run/docker.sock $usrImgTag -access_tkn ${{secrets.CLI_ACCESS_TOKEN}}\
-        \ -app_id ${{ env.APP_ID }} -scan_id ${{ env.SCAN_ID }} -branch_name ${{ env.BRANCH_NAME\
-        \ }} -req_url_map ${{ env.REQ_URL_MAP }} -tool_name github event:${{ github.event_name\
-        \ }}  pr_number:${{ github.event.number }}"
+      run: "usrVal=$(echo '${{fromJson(steps.auth_token.outputs.authTokenJson).user}}'\
+        \ | openssl enc -aes-256-cbc -d -a -K ${{secrets.ENC_KEY}} -iv ${{secrets.ENC_IV}}\
+        \ ) \nusrPassword=$(echo '${{fromJson(steps.auth_token.outputs.authTokenJson).password}}'\
+        \ | openssl enc -aes-256-cbc -d -base64 -A -K ${{secrets.ENC_KEY}} -iv ${{secrets.ENC_IV}}\
+        \ ) \nusrPrxyUrl=$(echo '${{fromJson(steps.auth_token.outputs.authTokenJson).proxyUrl}}'\
+        \ | openssl enc -aes-256-cbc -d -a -K ${{secrets.ENC_KEY}} -iv ${{secrets.ENC_IV}}\
+        \ ) \nusrImgTag=$(echo '${{fromJson(steps.auth_token.outputs.authTokenJson).imageTag}}'\
+        \ | openssl enc -aes-256-cbc -d -a -K ${{secrets.ENC_KEY}} -iv ${{secrets.ENC_IV}}\
+        \ ) \ndocker login --username  $usrVal --password $usrPassword $usrPrxyUrl\
+        \ \ndocker pull -q $usrImgTag \ndocker run -v ${{github.workspace}}:/src \
+        \ --volume ${{github.workspace}}:/workdir -v /var/run/docker.sock:/var/run/docker.sock\
+        \ $usrImgTag -access_tkn ${{secrets.CLI_ACCESS_TOKEN}} -app_id ${{ env.APP_ID\
+        \ }} -scan_id ${{ env.SCAN_ID }} -branch_name ${{ env.BRANCH_NAME }} -req_url_map\
+        \ ${{ env.REQ_URL_MAP }} -tool_name github event:${{ github.event_name }}\
+        \  pr_number:${{ github.event.number }}"
     - name: Upload SARIF file
       uses: github/codeql-action/upload-sarif@v2
       with:
