@@ -3,6 +3,6 @@ stage("Artifact Build"){
 }
 
 def buildArtifact() {
-    sh "mvn -U clean package -Darguments='-Dmaven.javadoc.skip=true'
+    sh "mvn -U clean package -Darguments='-Dmaven.javadoc.skip=true'"
     
 }
