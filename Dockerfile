@@ -10,7 +10,10 @@ RUN apk update \
 && apk add --no-cache curl \
 && apk add --no-cache nss \
 && apk add --no-cache openjdk8-jre \
-&& apk add --no-cache gcc
+&& apk add --no-cache python3-dev \
+&& apk add --no-cache gcc \
+&& apk add --no-cache libc-dev \
+&& apk add --no-cache libffi-dev
 
 RUN apk add --update \
     curl \
