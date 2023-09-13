@@ -9,7 +9,8 @@ RUN apk update \
 && apk add --no-cache --virtual=build-dependencies unzip \
 && apk add --no-cache curl \
 && apk add --no-cache nss \
-&& apk add --no-cache openjdk8-jre
+&& apk add --no-cache openjdk8-jre \
+&& apk add --no-cache gcc
 
 RUN apk add --update \
     curl \
