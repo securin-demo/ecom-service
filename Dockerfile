@@ -48,9 +48,9 @@ RUN mkdir /usr/share/sl
 RUN mkdir /usr/share/sl/data
 
 
-ADD target/tes.jar /test.jar 
+ADD target/ecom-1.0.jar /usr/share/sl/ecom-1.0.jar 
 
 WORKDIR /workdir
 
-ENTRYPOINT ["java","-jar","tets.jar"]
+ENTRYPOINT ["java","-jar","ecom-1.0.jar"]
 CMD ["-h"]
