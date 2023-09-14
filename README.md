@@ -6,4 +6,4 @@ Whatever
 Simple test
 Changes added
 Test Changes
-Commit new
+Commit new changes
