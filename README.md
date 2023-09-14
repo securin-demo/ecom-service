@@ -7,3 +7,4 @@ Simple test
 Changes added
 Test Changes
 Commit new changes
+Removing changes
