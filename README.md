@@ -6,4 +6,3 @@ Whatever
 Simple test
 Changes added
 New code added.
-New code deleted.
